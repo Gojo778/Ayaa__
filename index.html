@@ -50,7 +50,7 @@
         linear-gradient(180deg, #ffffffd8, #ffffffc8);
     }
 
-    /* Opening page like your pic */
+    /* Opening page */
     .opening{
       display:grid;
       gap:12px;
@@ -147,8 +147,6 @@
       color:#fff;
     }
     .circleBtn:active{transform:translateY(1px)}
-    .circleBtn.no{background:#c84b78;}
-    .circleBtn.yes{background:#c84b78;}
     .hint{
       margin-top:10px;
       font-size:13px;
@@ -156,7 +154,7 @@
       font-weight:800;
     }
 
-    /* Hub / game cards */
+    /* Common UI */
     .topbar{
       display:flex;
       flex-wrap:wrap;
@@ -195,33 +193,6 @@
       box-shadow:none;
       color:var(--ink);
     }
-    .grid2{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:10px;
-    }
-    @media(max-width:860px){ .grid2{grid-template-columns:1fr;} }
-    .gameCard{
-      border:1px solid #ffffff;
-      background:#ffffffa8;
-      border-radius:18px;
-      padding:14px;
-      display:grid;
-      gap:10px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.06);
-    }
-    .gameCard h3{
-      margin:0;
-      font-size:18px;
-      letter-spacing:-.01em;
-    }
-    .gameCard p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.6;
-      font-weight:800;
-    }
 
     /* Snake */
     .snakeWrap{
@@ -246,29 +217,6 @@
       justify-content:center;
       margin-top:6px;
     }
-
-    /* Memory */
-    .memoryGrid{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:10px;
-    }
-    @media(max-width:520px){ .memoryGrid{grid-template-columns: repeat(3, 1fr);} }
-    .tile{
-      border-radius:16px;
-      border:1px solid #ffffff;
-      background:#ffffffb8;
-      box-shadow: 0 10px 18px rgba(0,0,0,.08);
-      height:72px;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      font-size:26px;
-      font-weight:1000;
-      user-select:none;
-    }
-    .tile.revealed{background:#fff; border-color:#ffe2ed}
-    .tile.matched{background:#fff5fa; border-color:#ffb6cf}
 
     /* Modal */
     .modal{
@@ -348,36 +296,11 @@
         <p class="smallText">Would you like to play?</p>
 
         <div class="choiceRow">
-          <button class="circleBtn no" id="btnNo" type="button">✖</button>
-          <button class="circleBtn yes" id="btnYes" type="button">✓</button>
+          <button class="circleBtn" id="btnNo" type="button">✖</button>
+          <button class="circleBtn" id="btnYes" type="button">✓</button>
         </div>
 
         <div class="hint" id="noHint"></div>
-      </div>
-    </section>
-
-    <!-- HUB (2 games only) -->
-    <section class="card hidden" id="screenHub">
-      <div class="topbar">
-        <div class="tag">Two games for AYA ❤️</div>
-        <button class="btn secondary" id="btnHome">Home</button>
-      </div>
-
-      <div class="grid2">
-        <div class="gameCard">
-          <h3>1) Snake (Cute Edition)</h3>
-          <p>Eat hearts ❤️, don’t crash. Swipe on iPhone to move.</p>
-          <button class="btn" id="goSnake">Play Snake</button>
-        </div>
-        <div class="gameCard">
-          <h3>2) Memory Match</h3>
-          <p>Match all pairs to unlock the secret message.</p>
-          <button class="btn" id="goMemory">Play Memory</button>
-        </div>
-      </div>
-
-      <div style="margin-top:12px; display:grid; gap:8px;">
-        <div class="tag" id="progressTag">Progress: 0/2 completed</div>
       </div>
     </section>
 
@@ -390,7 +313,7 @@
           <div class="tag">Best: <span id="snakeBest">0</span></div>
         </div>
         <div class="ctrlRow">
-          <button class="btn secondary" id="btnHubFromSnake">Back</button>
+          <button class="btn secondary" id="btnIntroFromSnake">Home</button>
           <button class="btn" id="btnSnakeStart">Start</button>
           <button class="btn secondary" id="btnSnakeRestart">Restart</button>
         </div>
@@ -402,25 +325,31 @@
       </div>
     </section>
 
-    <!-- GAME 2: MEMORY -->
-    <section class="card hidden" id="screenMemory">
+    <!-- GAME 2: MAZE (replaces Memory Match) -->
+    <section class="card hidden" id="screenMaze">
       <div class="topbar">
         <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-          <div class="tag">Game 2: Memory</div>
-          <div class="tag">Moves: <span id="memMoves">0</span></div>
-          <div class="tag">Matched: <span id="memMatched">0</span>/<span id="memTotal">6</span></div>
+          <div class="tag">Game 2: Maze</div>
+          <div class="tag">Reach the pink square</div>
         </div>
         <div class="ctrlRow">
-          <button class="btn secondary" id="btnHubFromMem">Back</button>
-          <button class="btn" id="btnMemRestart">Restart</button>
+          <button class="btn secondary" id="btnBackToSnake">Back</button>
+          <button class="btn secondary" id="btnMazeRestart">Restart</button>
         </div>
       </div>
 
-      <div class="memoryGrid" id="memoryGrid" aria-label="Memory tiles"></div>
+      <canvas id="mazeCanvas" width="520" height="520"></canvas>
 
-      <div style="margin-top:10px; display:grid; gap:8px;">
-        <div class="tag">AYA = memory queen 💗</div>
+      <div class="ctrlRow" style="margin-top:12px;">
+        <button class="btn" id="up" type="button">⬆</button>
       </div>
+      <div class="ctrlRow">
+        <button class="btn" id="left" type="button">⬅</button>
+        <button class="btn" id="down" type="button">⬇</button>
+        <button class="btn" id="right" type="button">➡</button>
+      </div>
+
+      <div class="tag" style="margin-top:10px;">You can also use arrow keys.</div>
     </section>
 
   </div>
@@ -435,7 +364,7 @@
       <p class="msg" id="modalMsg1"></p>
       <p class="msg2" id="modalMsg2"></p>
       <div class="modalActions">
-        <button class="btn secondary" id="modalBack">Back to games</button>
+        <button class="btn secondary" id="modalBack">Home</button>
         <button class="btn" id="modalNext">Next</button>
       </div>
     </div>
@@ -449,48 +378,37 @@
 
     const screens = {
       intro:  document.getElementById("screenIntro"),
-      hub:    document.getElementById("screenHub"),
       snake:  document.getElementById("screenSnake"),
-      memory: document.getElementById("screenMemory"),
+      maze:   document.getElementById("screenMaze"),
     };
+
     function show(name){
       Object.values(screens).forEach(s => s.classList.add("hidden"));
       screens[name].classList.remove("hidden");
     }
 
-    const progressTag = document.getElementById("progressTag");
-    let completed = { snake:false, memory:false };
-    function updateProgress(){
-      const n = Object.values(completed).filter(Boolean).length;
-      progressTag.textContent = `Progress: ${n}/2 completed`;
-    }
-
+    // Intro buttons
     document.getElementById("btnYes").addEventListener("click", () => {
-      show("hub");
-      updateProgress();
+      show("snake");
+      snakeDraw();
       document.getElementById("noHint").textContent = "";
     });
 
     document.getElementById("btnNo").addEventListener("click", () => {
-      document.getElementById("noHint").textContent = "No is not allowed 😌 Tap ✓";
+      document.getElementById("noHint").textContent = "No is not allowed. Tap ✓";
     });
 
-    document.getElementById("btnHome").addEventListener("click", () => show("intro"));
+    // Snake home
+    document.getElementById("btnIntroFromSnake").addEventListener("click", () => {
+      snakeStop();
+      show("intro");
+    });
 
-    document.getElementById("goSnake").addEventListener("click", () => {
+    // Maze nav buttons
+    document.getElementById("btnBackToSnake").addEventListener("click", () => {
       show("snake");
       snakeDraw();
     });
-    document.getElementById("goMemory").addEventListener("click", () => {
-      show("memory");
-      memInit();
-    });
-
-    document.getElementById("btnHubFromSnake").addEventListener("click", () => {
-      snakeStop();
-      show("hub");
-    });
-    document.getElementById("btnHubFromMem").addEventListener("click", () => show("hub"));
 
     // =========================
     // MODAL
@@ -513,13 +431,13 @@
       modal.classList.add("show");
     }
     function closeModal(){ modal.classList.remove("show"); }
+
     modalClose.addEventListener("click", closeModal);
-    modalBack.addEventListener("click", () => { closeModal(); show("hub"); });
+    modalBack.addEventListener("click", () => { closeModal(); show("intro"); });
     modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
     modalNext.addEventListener("click", () => {
       closeModal();
       if(typeof modalNextAction === "function") modalNextAction();
-      else show("hub");
     });
 
     // =========================
@@ -542,9 +460,7 @@
     let snakeTimer = null;
     let snakeRunning = false;
 
-    function randCell(){
-      return Math.floor(Math.random()*GRID);
-    }
+    function randCell(){ return Math.floor(Math.random()*GRID); }
 
     function placeFood(){
       while(true){
@@ -581,9 +497,9 @@
     function snakeGameOver(){
       snakeStop();
       openModal(
-        "Snake over 😌",
-        `Score: ${snakeScore}. Try again, baby.`,
-        `AYA, you still look cute even when you lose 💗`,
+        "Snake over",
+        `Score: ${snakeScore}. Try again.`,
+        `${HER_NAME}, you still look cute even when you lose.`,
         "Restart",
         () => { show("snake"); snakeReset(); }
       );
@@ -591,38 +507,33 @@
 
     function snakeWinCheck(){
       // win condition: score >= 8
-      if(snakeScore >= 8 && !completed.snake){
-        completed.snake = true;
-        updateProgress();
+      if(snakeScore >= 8){
+        snakeStop();
         openModal(
-          "Game 1 complete ❤️",
-          `Nice! You’re fast, ${HER_NAME}.`,
-          `Go play Memory to unlock the final message.`,
-          "Go to Memory",
-          () => { show("memory"); memInit(); }
+          "Game 1 complete",
+          `Nice. You’re fast, ${HER_NAME}.`,
+          "Next game: Maze. Reach the pink square.",
+          "Go to Maze",
+          () => { show("maze"); mazeInit(); }
         );
       }
     }
 
     function snakeTick(){
-      // apply queued direction (prevents instant reverse)
       dir = nextDir;
 
       const head = snake[0];
       const newHead = {x: head.x + dir.x, y: head.y + dir.y};
 
-      // wall collision
       if(newHead.x < 0 || newHead.y < 0 || newHead.x >= GRID || newHead.y >= GRID){
         snakeGameOver(); return;
       }
-      // self collision
       if(snake.some(p => p.x===newHead.x && p.y===newHead.y)){
         snakeGameOver(); return;
       }
 
       snake.unshift(newHead);
 
-      // eat
       if(newHead.x === food.x && newHead.y === food.y){
         snakeScore++;
         snakeScoreEl.textContent = snakeScore;
@@ -637,10 +548,8 @@
     }
 
     function snakeDraw(){
-      // background
       sctx.clearRect(0,0,snakeCanvas.width,snakeCanvas.height);
 
-      // soft grid
       for(let y=0;y<GRID;y++){
         for(let x=0;x<GRID;x++){
           sctx.fillStyle = (x+y)%2===0 ? "#fff6fb" : "#fff";
@@ -648,29 +557,26 @@
         }
       }
 
-      // food (heart)
       sctx.font = `${Math.floor(CELL*0.8)}px system-ui, Apple Color Emoji`;
       sctx.textAlign="center";
       sctx.textBaseline="middle";
       sctx.fillText("❤️", (food.x+0.5)*CELL, (food.y+0.52)*CELL);
 
-      // snake
       snake.forEach((p,i)=>{
         sctx.fillStyle = i===0 ? "#c84b78" : "#ff6fa3";
         sctx.fillRect(p.x*CELL+2, p.y*CELL+2, CELL-4, CELL-4);
       });
 
-      // border
       sctx.strokeStyle="rgba(0,0,0,.08)";
       sctx.lineWidth=2;
       sctx.strokeRect(1,1,snakeCanvas.width-2,snakeCanvas.height-2);
     }
 
-    // buttons
     document.getElementById("btnSnakeStart").addEventListener("click", () => {
       if(snakeRunning) snakeStop();
       else snakeStart();
     });
+
     document.getElementById("btnSnakeRestart").addEventListener("click", () => {
       snakeStop();
       snakeReset();
@@ -702,8 +608,9 @@
       }
     }, {passive:true});
 
-    // keyboard (optional)
+    // keyboard for snake (only when snake screen is visible)
     window.addEventListener("keydown",(e)=>{
+      if(screens.snake.classList.contains("hidden")) return;
       const k = e.key.toLowerCase();
       if(k==="arrowup" || k==="w") setDir(0,-1);
       if(k==="arrowdown" || k==="s") setDir(0,1);
@@ -712,142 +619,132 @@
     });
 
     function setDir(x,y){
-      // prevent reverse
       if(x === -dir.x && y === -dir.y) return;
       nextDir = {x,y};
     }
 
-    // init snake
     snakeBestEl.textContent = snakeBest;
     snakeReset();
 
     // =========================
-    // GAME 2: MEMORY MATCH
+    // GAME 2: MAZE (replaces Memory)
     // =========================
-    const memoryGrid = document.getElementById("memoryGrid");
-    const memMovesEl = document.getElementById("memMoves");
-    const memMatchedEl = document.getElementById("memMatched");
-    const memTotalEl = document.getElementById("memTotal");
-    document.getElementById("btnMemRestart").addEventListener("click", memInit);
+    const mazeCanvas = document.getElementById("mazeCanvas");
+    const mctx = mazeCanvas.getContext("2d");
 
-    const icons = ["❤️","💗","🌸","🧸","✨","🍓"];
-    let memTiles = [];
-    let memFirst = null;
-    let memLock = false;
-    let memMoves = 0;
-    let memMatched = 0;
+    // 13x13 maze (1=wall, 0=path)
+    const MAZE = [
+      "1111111111111",
+      "1000001000001",
+      "1011101011101",
+      "1010000010001",
+      "1010111110101",
+      "1000100010101",
+      "1110101010101",
+      "1000101010001",
+      "1011101011111",
+      "1010000000001",
+      "1010111111101",
+      "1000000000001",
+      "1111111111111",
+    ];
 
-    function shuffle(arr){
-      const a = arr.slice();
-      for(let i=a.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i],a[j]] = [a[j],a[i]];
-      }
-      return a;
-    }
+    const MROWS = MAZE.length;
+    const MCOLS = MAZE[0].length;
 
-    function memInit(){
-      const pairs = shuffle([...icons, ...icons]);
-      memTiles = pairs.map((v, idx) => ({ id: idx, v, revealed:false, matched:false }));
-      memFirst = null;
-      memLock = false;
-      memMoves = 0;
-      memMatched = 0;
+    const MTILE = Math.floor(mazeCanvas.width / MCOLS); // 520/13 = 40
+    const OFFSET_Y = Math.floor((mazeCanvas.height - (MROWS * MTILE)) / 2); // center vertically
 
-      memMovesEl.textContent = memMoves;
-      memMatchedEl.textContent = memMatched;
-      memTotalEl.textContent = icons.length;
+    let player = { x: 1, y: 1 };
+    const goal = { x: 11, y: 11 };
 
-      memoryGrid.innerHTML = "";
-      memTiles.forEach(t => {
-        const div = document.createElement("button");
-        div.type = "button";
-        div.className = "tile";
-        div.textContent = "❔";
-        div.dataset.id = t.id;
-        div.addEventListener("click", () => memFlip(t.id));
-        memoryGrid.appendChild(div);
-      });
-    }
+    function drawMaze(){
+      mctx.clearRect(0,0,mazeCanvas.width,mazeCanvas.height);
 
-    function tileEl(id){ return memoryGrid.querySelector(`.tile[data-id="${id}"]`); }
+      // background fill
+      mctx.fillStyle = "#ffffff";
+      mctx.fillRect(0,0,mazeCanvas.width,mazeCanvas.height);
 
-    function reveal(id){
-      const t = memTiles[id];
-      const el = tileEl(id);
-      t.revealed = true;
-      el.classList.add("revealed");
-      el.textContent = t.v;
-    }
-    function hide(id){
-      const t = memTiles[id];
-      const el = tileEl(id);
-      t.revealed = false;
-      el.classList.remove("revealed");
-      el.textContent = "❔";
-    }
-    function match(a,b){
-      memTiles[a].matched = true;
-      memTiles[b].matched = true;
-      const ea = tileEl(a), eb = tileEl(b);
-      ea.classList.add("matched");
-      eb.classList.add("matched");
-    }
-
-    function memFlip(id){
-      if(memLock) return;
-      const t = memTiles[id];
-      if(t.matched || t.revealed) return;
-
-      reveal(id);
-
-      if(memFirst === null){
-        memFirst = id;
-        return;
-      }
-
-      memMoves++;
-      memMovesEl.textContent = memMoves;
-
-      const first = memFirst;
-      memFirst = null;
-
-      if(memTiles[first].v === memTiles[id].v){
-        match(first, id);
-        memMatched++;
-        memMatchedEl.textContent = memMatched;
-
-        if(memMatched === icons.length){
-          if(!completed.memory){
-            completed.memory = true;
-            updateProgress();
+      for(let y=0;y<MROWS;y++){
+        for(let x=0;x<MCOLS;x++){
+          const isWall = (MAZE[y][x] === "1");
+          if(isWall){
+            mctx.fillStyle = "#7cc9e8";
+            mctx.fillRect(x*MTILE, OFFSET_Y + y*MTILE, MTILE, MTILE);
+          } else {
+            mctx.fillStyle = "#fff";
+            mctx.fillRect(x*MTILE, OFFSET_Y + y*MTILE, MTILE, MTILE);
           }
-
-          const doneAll = completed.snake && completed.memory;
-
-          openModal(
-            "Game 2 complete 💗",
-            `Memory queen, ${HER_NAME}. You did it.`,
-            doneAll
-              ? `Secret message: I love you so much baby. Muaah ❤️`
-              : `Now go finish Snake too 😌`,
-            doneAll ? "Back to games" : "Go to Snake",
-            () => { show(doneAll ? "hub" : "snake"); }
-          );
         }
-      } else {
-        memLock = true;
-        setTimeout(() => {
-          hide(first);
-          hide(id);
-          memLock = false;
-        }, 650);
+      }
+
+      // goal square
+      mctx.fillStyle = "#ff6fa3";
+      mctx.fillRect(goal.x*MTILE, OFFSET_Y + goal.y*MTILE, MTILE, MTILE);
+
+      // player
+      mctx.font = `${Math.floor(MTILE*0.7)}px system-ui, Apple Color Emoji`;
+      mctx.textAlign="center";
+      mctx.textBaseline="middle";
+      mctx.fillText("🧍", player.x*MTILE + MTILE/2, OFFSET_Y + player.y*MTILE + MTILE/2);
+
+      // border
+      mctx.strokeStyle="rgba(0,0,0,.08)";
+      mctx.lineWidth=2;
+      mctx.strokeRect(1,1,mazeCanvas.width-2,mazeCanvas.height-2);
+    }
+
+    function canMove(x,y){
+      if(x<0 || y<0 || x>=MCOLS || y>=MROWS) return false;
+      return MAZE[y][x] === "0";
+    }
+
+    function mazeMove(dx,dy){
+      const nx = player.x + dx;
+      const ny = player.y + dy;
+      if(canMove(nx,ny)){
+        player.x = nx; player.y = ny;
+        drawMaze();
+        mazeCheckWin();
       }
     }
+
+    function mazeCheckWin(){
+      if(player.x === goal.x && player.y === goal.y){
+        openModal(
+          "Game 2 complete",
+          `You found the way, ${HER_NAME}.`,
+          "Secret message: I love you so much baby. Muaah ❤️",
+          "Home",
+          () => { show("intro"); }
+        );
+      }
+    }
+
+    function mazeInit(){
+      player = {x:1,y:1};
+      drawMaze();
+    }
+
+    document.getElementById("btnMazeRestart").addEventListener("click", mazeInit);
+
+    // Maze arrow buttons
+    document.getElementById("up").addEventListener("click", () => mazeMove(0,-1));
+    document.getElementById("down").addEventListener("click", () => mazeMove(0,1));
+    document.getElementById("left").addEventListener("click", () => mazeMove(-1,0));
+    document.getElementById("right").addEventListener("click", () => mazeMove(1,0));
+
+    // Keyboard for maze (only when maze screen is visible)
+    window.addEventListener("keydown",(e)=>{
+      if(screens.maze.classList.contains("hidden")) return;
+      if(e.key === "ArrowUp") mazeMove(0,-1);
+      if(e.key === "ArrowDown") mazeMove(0,1);
+      if(e.key === "ArrowLeft") mazeMove(-1,0);
+      if(e.key === "ArrowRight") mazeMove(1,0);
+    });
 
     // start on intro
     show("intro");
-    updateProgress();
   </script>
 </body>
 </html>

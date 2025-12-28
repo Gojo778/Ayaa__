@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For AYA</title>
+  <style>
+    :root{
+      --bg:#ffd7e5;
+      --bg2:#ffe9f1;
+      --card:#ffffffcc;
+      --ink:#3b1b2b;
+      --muted:#6a3a52;
+      --accent:#c84b78;
+      --accent2:#ffb6cf;
+      --shadow: 0 18px 45px rgba(0,0,0,.15);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 700px at 15% 25%, #ff6fa340, transparent 55%),
+        radial-gradient(700px 600px at 85% 30%, #ffb6cf55, transparent 60%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .app{ width:min(860px, 100%); display:grid; gap:14px; }
+    .card{
+      background: var(--card);
+      border: 1px solid #ffffff;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hidden{display:none !important;}
+
+    .paper{
+      background:
+        radial-gradient(1px 1px at 20% 25%, #00000010 50%, transparent 51%),
+        radial-gradient(1px 1px at 70% 65%, #00000010 50%, transparent 51%),
+        radial-gradient(1px 1px at 40% 80%, #00000010 50%, transparent 51%),
+        linear-gradient(180deg, #ffffffd8, #ffffffc8);
+    }
+
+    /* Opening page like your pic */
+    .opening{
+      display:grid;
+      gap:12px;
+      justify-items:center;
+      text-align:center;
+      padding:22px 16px;
+    }
+    .kitty{
+      width:170px;height:170px;
+      position:relative;
+      filter: drop-shadow(0 18px 22px rgba(0,0,0,.12));
+    }
+    .kitty .head{
+      position:absolute; inset:30px 22px 18px 22px;
+      background:#fff;
+      border-radius: 40px;
+      border: 3px solid #2a1a22;
+    }
+    .kitty .ear{
+      position:absolute; top:20px;
+      width:52px;height:52px;
+      background:#fff;
+      border:3px solid #2a1a22;
+      border-bottom:none;
+      border-radius: 16px 16px 0 0;
+      transform: rotate(10deg);
+    }
+    .kitty .ear.left{left:26px; transform: rotate(-14deg);}
+    .kitty .ear.right{right:26px;}
+    .kitty .eye{
+      position:absolute; top:92px;
+      width:18px;height:18px; border-radius:50%;
+      background:#2a1a22;
+    }
+    .kitty .eye.left{left:62px}
+    .kitty .eye.right{right:62px}
+    .kitty .mouth{
+      position:absolute; top:112px; left:50%;
+      width:28px;height:18px;
+      transform:translateX(-50%);
+      border-bottom:3px solid #2a1a22;
+      border-radius:0 0 18px 18px;
+    }
+    .kitty .blush{
+      position:absolute; top:112px;
+      width:34px;height:18px;
+      background:#ff8fb3;
+      opacity:.55;
+      border-radius:999px;
+    }
+    .kitty .blush.left{left:38px}
+    .kitty .blush.right{right:38px}
+    .kitty .hearts{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      font-size:22px;
+      opacity:.9;
+    }
+
+    .bigTitle{
+      margin:0;
+      font-weight:1000;
+      letter-spacing:.02em;
+      color:var(--accent);
+      font-size: clamp(34px, 5vw, 56px);
+      text-transform: uppercase;
+    }
+    .smallText{
+      margin:0;
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+    }
+
+    .choiceRow{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      margin-top:8px;
+    }
+    .circleBtn{
+      width:62px;height:62px;
+      border-radius:999px;
+      border:0;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size:26px;
+      font-weight:1000;
+      box-shadow: 0 14px 26px rgba(0,0,0,.12);
+      background: #c84b78;
+      color:#fff;
+    }
+    .circleBtn:active{transform:translateY(1px)}
+    .circleBtn.no{background:#c84b78;}
+    .circleBtn.yes{background:#c84b78;}
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    /* Hub / game cards */
+    .topbar{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .tag{
+      font-size:13px;
+      color:var(--muted);
+      background:#ffffffb8;
+      border:1px solid #ffffff;
+      padding:8px 10px;
+      border-radius:999px;
+      text-align:center;
+      font-weight:900;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:12px 16px;
+      border-radius:14px;
+      border:0;
+      cursor:pointer;
+      font-weight:900;
+      background: linear-gradient(135deg, #ff6fa3, #ffb6cf);
+      color:#3b1124;
+      box-shadow: 0 14px 26px rgba(255,111,163,.25);
+    }
+    .btn.secondary{
+      background:#ffffffcc;
+      border:1px solid #ffffff;
+      box-shadow:none;
+      color:var(--ink);
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:10px;
+    }
+    @media(max-width:860px){ .grid2{grid-template-columns:1fr;} }
+    .gameCard{
+      border:1px solid #ffffff;
+      background:#ffffffa8;
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.06);
+    }
+    .gameCard h3{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.01em;
+    }
+    .gameCard p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      font-weight:800;
+    }
+
+    /* Snake */
+    .snakeWrap{
+      display:grid;
+      gap:10px;
+    }
+    canvas{
+      width:100%;
+      max-width:520px;
+      border-radius:18px;
+      border: 2px solid #ffffff;
+      background: #ffffff;
+      display:block;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
+      touch-action: none;
+    }
+    .ctrlRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:6px;
+    }
+
+    /* Memory */
+    .memoryGrid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+    }
+    @media(max-width:520px){ .memoryGrid{grid-template-columns: repeat(3, 1fr);} }
+    .tile{
+      border-radius:16px;
+      border:1px solid #ffffff;
+      background:#ffffffb8;
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      height:72px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size:26px;
+      font-weight:1000;
+      user-select:none;
+    }
+    .tile.revealed{background:#fff; border-color:#ffe2ed}
+    .tile.matched{background:#fff5fa; border-color:#ffb6cf}
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0;
+      display:none; place-items:center;
+      padding:18px;
+      background: rgba(0,0,0,.35);
+      z-index:9999;
+    }
+    .modal.show{display:grid}
+    .modalCard{
+      width:min(760px, 100%);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fff, #fff7fb);
+      border: 1px solid #ffffff;
+      box-shadow: 0 22px 60px rgba(0,0,0,.18);
+      padding:18px;
+    }
+    .modalHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .modalHeader .close{
+      border:1px solid #ffffff;
+      background:#ffffff;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:1000;
+      cursor:pointer;
+    }
+    .msg{
+      margin:0;
+      font-size: clamp(18px, 2.4vw, 24px);
+      line-height:1.55;
+      color:var(--ink);
+      font-weight:1000;
+    }
+    .msg2{
+      margin:10px 0 0;
+      font-size:16px;
+      line-height:1.6;
+      color:var(--muted);
+      font-weight:900;
+    }
+    .modalActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+      justify-content:flex-end;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- OPENING -->
+    <section class="card paper" id="screenIntro">
+      <div class="opening">
+        <div class="kitty" aria-hidden="true">
+          <div class="hearts">💗 &nbsp; 🌸 &nbsp; 💗</div>
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+          <div class="head"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="blush left"></div>
+          <div class="blush right"></div>
+          <div class="mouth"></div>
+        </div>
+
+        <h1 class="bigTitle">HEY BABY!</h1>
+        <p class="smallText">Would you like to play?</p>
+
+        <div class="choiceRow">
+          <button class="circleBtn no" id="btnNo" type="button">✖</button>
+          <button class="circleBtn yes" id="btnYes" type="button">✓</button>
+        </div>
+
+        <div class="hint" id="noHint"></div>
+      </div>
+    </section>
+
+    <!-- HUB (2 games only) -->
+    <section class="card hidden" id="screenHub">
+      <div class="topbar">
+        <div class="tag">Two games for AYA ❤️</div>
+        <button class="btn secondary" id="btnHome">Home</button>
+      </div>
+
+      <div class="grid2">
+        <div class="gameCard">
+          <h3>1) Snake (Cute Edition)</h3>
+          <p>Eat hearts ❤️, don’t crash. Swipe on iPhone to move.</p>
+          <button class="btn" id="goSnake">Play Snake</button>
+        </div>
+        <div class="gameCard">
+          <h3>2) Memory Match</h3>
+          <p>Match all pairs to unlock the secret message.</p>
+          <button class="btn" id="goMemory">Play Memory</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:grid; gap:8px;">
+        <div class="tag" id="progressTag">Progress: 0/2 completed</div>
+      </div>
+    </section>
+
+    <!-- GAME 1: SNAKE -->
+    <section class="card hidden" id="screenSnake">
+      <div class="topbar">
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <div class="tag">Game 1: Snake</div>
+          <div class="tag">Score: <span id="snakeScore">0</span></div>
+          <div class="tag">Best: <span id="snakeBest">0</span></div>
+        </div>
+        <div class="ctrlRow">
+          <button class="btn secondary" id="btnHubFromSnake">Back</button>
+          <button class="btn" id="btnSnakeStart">Start</button>
+          <button class="btn secondary" id="btnSnakeRestart">Restart</button>
+        </div>
+      </div>
+
+      <div class="snakeWrap">
+        <canvas id="snakeCanvas" width="520" height="520"></canvas>
+        <div class="tag">Tip: Swipe to turn. Eat ❤️ to grow.</div>
+      </div>
+    </section>
+
+    <!-- GAME 2: MEMORY -->
+    <section class="card hidden" id="screenMemory">
+      <div class="topbar">
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <div class="tag">Game 2: Memory</div>
+          <div class="tag">Moves: <span id="memMoves">0</span></div>
+          <div class="tag">Matched: <span id="memMatched">0</span>/<span id="memTotal">6</span></div>
+        </div>
+        <div class="ctrlRow">
+          <button class="btn secondary" id="btnHubFromMem">Back</button>
+          <button class="btn" id="btnMemRestart">Restart</button>
+        </div>
+      </div>
+
+      <div class="memoryGrid" id="memoryGrid" aria-label="Memory tiles"></div>
+
+      <div style="margin-top:10px; display:grid; gap:8px;">
+        <div class="tag">AYA = memory queen 💗</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modalCard">
+      <div class="modalHeader">
+        <div class="tag" id="modalTitle">Message</div>
+        <button class="close" id="modalClose">Close</button>
+      </div>
+      <p class="msg" id="modalMsg1"></p>
+      <p class="msg2" id="modalMsg2"></p>
+      <div class="modalActions">
+        <button class="btn secondary" id="modalBack">Back to games</button>
+        <button class="btn" id="modalNext">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // BASIC NAV
+    // =========================
+    const HER_NAME = "AYA";
+
+    const screens = {
+      intro:  document.getElementById("screenIntro"),
+      hub:    document.getElementById("screenHub"),
+      snake:  document.getElementById("screenSnake"),
+      memory: document.getElementById("screenMemory"),
+    };
+    function show(name){
+      Object.values(screens).forEach(s => s.classList.add("hidden"));
+      screens[name].classList.remove("hidden");
+    }
+
+    const progressTag = document.getElementById("progressTag");
+    let completed = { snake:false, memory:false };
+    function updateProgress(){
+      const n = Object.values(completed).filter(Boolean).length;
+      progressTag.textContent = `Progress: ${n}/2 completed`;
+    }
+
+    document.getElementById("btnYes").addEventListener("click", () => {
+      show("hub");
+      updateProgress();
+      document.getElementById("noHint").textContent = "";
+    });
+
+    document.getElementById("btnNo").addEventListener("click", () => {
+      document.getElementById("noHint").textContent = "No is not allowed 😌 Tap ✓";
+    });
+
+    document.getElementById("btnHome").addEventListener("click", () => show("intro"));
+
+    document.getElementById("goSnake").addEventListener("click", () => {
+      show("snake");
+      snakeDraw();
+    });
+    document.getElementById("goMemory").addEventListener("click", () => {
+      show("memory");
+      memInit();
+    });
+
+    document.getElementById("btnHubFromSnake").addEventListener("click", () => {
+      snakeStop();
+      show("hub");
+    });
+    document.getElementById("btnHubFromMem").addEventListener("click", () => show("hub"));
+
+    // =========================
+    // MODAL
+    // =========================
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMsg1 = document.getElementById("modalMsg1");
+    const modalMsg2 = document.getElementById("modalMsg2");
+    const modalClose = document.getElementById("modalClose");
+    const modalBack = document.getElementById("modalBack");
+    const modalNext = document.getElementById("modalNext");
+    let modalNextAction = null;
+
+    function openModal(title, m1, m2, nextLabel="Next", nextAction=null){
+      modalTitle.textContent = title;
+      modalMsg1.textContent = m1;
+      modalMsg2.textContent = m2;
+      modalNext.textContent = nextLabel;
+      modalNextAction = nextAction;
+      modal.classList.add("show");
+    }
+    function closeModal(){ modal.classList.remove("show"); }
+    modalClose.addEventListener("click", closeModal);
+    modalBack.addEventListener("click", () => { closeModal(); show("hub"); });
+    modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
+    modalNext.addEventListener("click", () => {
+      closeModal();
+      if(typeof modalNextAction === "function") modalNextAction();
+      else show("hub");
+    });
+
+    // =========================
+    // GAME 1: SNAKE
+    // =========================
+    const snakeCanvas = document.getElementById("snakeCanvas");
+    const sctx = snakeCanvas.getContext("2d");
+    const snakeScoreEl = document.getElementById("snakeScore");
+    const snakeBestEl  = document.getElementById("snakeBest");
+
+    const GRID = 20; // 20x20
+    const CELL = Math.floor(snakeCanvas.width / GRID);
+
+    let snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+    let dir = {x:1,y:0};
+    let nextDir = {x:1,y:0};
+    let food = {x:15,y:10};
+    let snakeScore = 0;
+    let snakeBest = 0;
+    let snakeTimer = null;
+    let snakeRunning = false;
+
+    function randCell(){
+      return Math.floor(Math.random()*GRID);
+    }
+
+    function placeFood(){
+      while(true){
+        const f = {x:randCell(), y:randCell()};
+        const hit = snake.some(p => p.x===f.x && p.y===f.y);
+        if(!hit){ food = f; return; }
+      }
+    }
+
+    function snakeReset(){
+      snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+      dir = {x:1,y:0};
+      nextDir = {x:1,y:0};
+      snakeScore = 0;
+      snakeScoreEl.textContent = snakeScore;
+      placeFood();
+      snakeDraw();
+    }
+
+    function snakeStart(){
+      if(snakeRunning) return;
+      snakeRunning = true;
+      document.getElementById("btnSnakeStart").textContent = "Pause";
+      snakeTimer = setInterval(snakeTick, 110);
+    }
+
+    function snakeStop(){
+      snakeRunning = false;
+      clearInterval(snakeTimer);
+      snakeTimer = null;
+      document.getElementById("btnSnakeStart").textContent = "Start";
+    }
+
+    function snakeGameOver(){
+      snakeStop();
+      openModal(
+        "Snake over 😌",
+        `Score: ${snakeScore}. Try again, baby.`,
+        `AYA, you still look cute even when you lose 💗`,
+        "Restart",
+        () => { show("snake"); snakeReset(); }
+      );
+    }
+
+    function snakeWinCheck(){
+      // win condition: score >= 8
+      if(snakeScore >= 8 && !completed.snake){
+        completed.snake = true;
+        updateProgress();
+        openModal(
+          "Game 1 complete ❤️",
+          `Nice! You’re fast, ${HER_NAME}.`,
+          `Go play Memory to unlock the final message.`,
+          "Go to Memory",
+          () => { show("memory"); memInit(); }
+        );
+      }
+    }
+
+    function snakeTick(){
+      // apply queued direction (prevents instant reverse)
+      dir = nextDir;
+
+      const head = snake[0];
+      const newHead = {x: head.x + dir.x, y: head.y + dir.y};
+
+      // wall collision
+      if(newHead.x < 0 || newHead.y < 0 || newHead.x >= GRID || newHead.y >= GRID){
+        snakeGameOver(); return;
+      }
+      // self collision
+      if(snake.some(p => p.x===newHead.x && p.y===newHead.y)){
+        snakeGameOver(); return;
+      }
+
+      snake.unshift(newHead);
+
+      // eat
+      if(newHead.x === food.x && newHead.y === food.y){
+        snakeScore++;
+        snakeScoreEl.textContent = snakeScore;
+        if(snakeScore > snakeBest){ snakeBest = snakeScore; snakeBestEl.textContent = snakeBest; }
+        placeFood();
+        snakeWinCheck();
+      } else {
+        snake.pop();
+      }
+
+      snakeDraw();
+    }
+
+    function snakeDraw(){
+      // background
+      sctx.clearRect(0,0,snakeCanvas.width,snakeCanvas.height);
+
+      // soft grid
+      for(let y=0;y<GRID;y++){
+        for(let x=0;x<GRID;x++){
+          sctx.fillStyle = (x+y)%2===0 ? "#fff6fb" : "#fff";
+          sctx.fillRect(x*CELL, y*CELL, CELL, CELL);
+        }
+      }
+
+      // food (heart)
+      sctx.font = `${Math.floor(CELL*0.8)}px system-ui, Apple Color Emoji`;
+      sctx.textAlign="center";
+      sctx.textBaseline="middle";
+      sctx.fillText("❤️", (food.x+0.5)*CELL, (food.y+0.52)*CELL);
+
+      // snake
+      snake.forEach((p,i)=>{
+        sctx.fillStyle = i===0 ? "#c84b78" : "#ff6fa3";
+        sctx.fillRect(p.x*CELL+2, p.y*CELL+2, CELL-4, CELL-4);
+      });
+
+      // border
+      sctx.strokeStyle="rgba(0,0,0,.08)";
+      sctx.lineWidth=2;
+      sctx.strokeRect(1,1,snakeCanvas.width-2,snakeCanvas.height-2);
+    }
+
+    // buttons
+    document.getElementById("btnSnakeStart").addEventListener("click", () => {
+      if(snakeRunning) snakeStop();
+      else snakeStart();
+    });
+    document.getElementById("btnSnakeRestart").addEventListener("click", () => {
+      snakeStop();
+      snakeReset();
+    });
+
+    // swipe controls (iPhone)
+    let sTouchStart = null;
+    snakeCanvas.addEventListener("touchstart", (e)=>{
+      const t = e.touches[0];
+      sTouchStart = {x:t.clientX, y:t.clientY};
+    }, {passive:true});
+
+    snakeCanvas.addEventListener("touchend", (e)=>{
+      if(!sTouchStart) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sTouchStart.x;
+      const dy = t.clientY - sTouchStart.y;
+      sTouchStart = null;
+
+      const absX = Math.abs(dx), absY = Math.abs(dy);
+      if(Math.max(absX,absY) < 18) return;
+
+      if(absX > absY){
+        if(dx > 0) setDir(1,0);
+        else setDir(-1,0);
+      } else {
+        if(dy > 0) setDir(0,1);
+        else setDir(0,-1);
+      }
+    }, {passive:true});
+
+    // keyboard (optional)
+    window.addEventListener("keydown",(e)=>{
+      const k = e.key.toLowerCase();
+      if(k==="arrowup" || k==="w") setDir(0,-1);
+      if(k==="arrowdown" || k==="s") setDir(0,1);
+      if(k==="arrowleft" || k==="a") setDir(-1,0);
+      if(k==="arrowright" || k==="d") setDir(1,0);
+    });
+
+    function setDir(x,y){
+      // prevent reverse
+      if(x === -dir.x && y === -dir.y) return;
+      nextDir = {x,y};
+    }
+
+    // init snake
+    snakeBestEl.textContent = snakeBest;
+    snakeReset();
+
+    // =========================
+    // GAME 2: MEMORY MATCH
+    // =========================
+    const memoryGrid = document.getElementById("memoryGrid");
+    const memMovesEl = document.getElementById("memMoves");
+    const memMatchedEl = document.getElementById("memMatched");
+    const memTotalEl = document.getElementById("memTotal");
+    document.getElementById("btnMemRestart").addEventListener("click", memInit);
+
+    const icons = ["❤️","💗","🌸","🧸","✨","🍓"];
+    let memTiles = [];
+    let memFirst = null;
+    let memLock = false;
+    let memMoves = 0;
+    let memMatched = 0;
+
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    function memInit(){
+      const pairs = shuffle([...icons, ...icons]);
+      memTiles = pairs.map((v, idx) => ({ id: idx, v, revealed:false, matched:false }));
+      memFirst = null;
+      memLock = false;
+      memMoves = 0;
+      memMatched = 0;
+
+      memMovesEl.textContent = memMoves;
+      memMatchedEl.textContent = memMatched;
+      memTotalEl.textContent = icons.length;
+
+      memoryGrid.innerHTML = "";
+      memTiles.forEach(t => {
+        const div = document.createElement("button");
+        div.type = "button";
+        div.className = "tile";
+        div.textContent = "❔";
+        div.dataset.id = t.id;
+        div.addEventListener("click", () => memFlip(t.id));
+        memoryGrid.appendChild(div);
+      });
+    }
+
+    function tileEl(id){ return memoryGrid.querySelector(`.tile[data-id="${id}"]`); }
+
+    function reveal(id){
+      const t = memTiles[id];
+      const el = tileEl(id);
+      t.revealed = true;
+      el.classList.add("revealed");
+      el.textContent = t.v;
+    }
+    function hide(id){
+      const t = memTiles[id];
+      const el = tileEl(id);
+      t.revealed = false;
+      el.classList.remove("revealed");
+      el.textContent = "❔";
+    }
+    function match(a,b){
+      memTiles[a].matched = true;
+      memTiles[b].matched = true;
+      const ea = tileEl(a), eb = tileEl(b);
+      ea.classList.add("matched");
+      eb.classList.add("matched");
+    }
+
+    function memFlip(id){
+      if(memLock) return;
+      const t = memTiles[id];
+      if(t.matched || t.revealed) return;
+
+      reveal(id);
+
+      if(memFirst === null){
+        memFirst = id;
+        return;
+      }
+
+      memMoves++;
+      memMovesEl.textContent = memMoves;
+
+      const first = memFirst;
+      memFirst = null;
+
+      if(memTiles[first].v === memTiles[id].v){
+        match(first, id);
+        memMatched++;
+        memMatchedEl.textContent = memMatched;
+
+        if(memMatched === icons.length){
+          if(!completed.memory){
+            completed.memory = true;
+            updateProgress();
+          }
+
+          const doneAll = completed.snake && completed.memory;
+
+          openModal(
+            "Game 2 complete 💗",
+            `Memory queen, ${HER_NAME}. You did it.`,
+            doneAll
+              ? `Secret message: I love you so much baby. Muaah ❤️`
+              : `Now go finish Snake too 😌`,
+            doneAll ? "Back to games" : "Go to Snake",
+            () => { show(doneAll ? "hub" : "snake"); }
+          );
+        }
+      } else {
+        memLock = true;
+        setTimeout(() => {
+          hide(first);
+          hide(id);
+          memLock = false;
+        }, 650);
+      }
+    }
+
+    // start on intro
+    show("intro");
+    updateProgress();
+  </script>
+</body>
+</html>
